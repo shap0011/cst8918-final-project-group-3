@@ -1,5 +1,14 @@
 # CST8918 Final Project – Terraform, AKS, and GitHub Actions
 
+## Team Members
+
+**Olga Durham** – https://github.com/shap0011 \
+**Anani Thierry Kassa** – https://github.com/AnaniKassa \
+**Dolsom Bouda** – https://github.com/boud0217 \
+**Junfeng Rong** – https://github.com/JunfengRong
+
+---
+
 ## Project Overview
 
 This project demonstrates the implementation of **Infrastructure as Code (IaC)** using Terraform to deploy and manage cloud infrastructure on Microsoft Azure.
@@ -22,12 +31,16 @@ GitHub Actions is used to automate:
 
 ---
 
-## Team Members
+## Reference Application
 
-**Olga Durham** – https://github.com/shap0011 \
-**Anani Thierry Kassa** – https://github.com/AnaniKassa \
-**Dolsom Bouda** – https://github.com/boud0217 \
-**Junfeng Rong** – https://github.com/JunfengRong
+This project is based on the Remix Weather Application provided by the course instructor:
+
+- [cst8918-a03-h03-pulumi-weather](https://github.com/rlmckenney/cst8918-a03-h03-pulumi-weather)
+
+Note:
+The original project uses **Pulumi** for infrastructure deployment. In this project, we **replace Pulumi with Terraform** and extend the deployment using Azure AKS and GitHub Actions.
+
+The application code from this repository is reused and adapted for containerized deployment in Azure Kubernetes Service (AKS).
 
 ---
 
