@@ -24,10 +24,10 @@ GitHub Actions is used to automate:
 
 ## Team Members
 
-Olga Durham – https://github.com/shap0011
-Anani Thierry Kassa – https://github.com/AnaniKassa
-Dolsom Bouda – https://github.com/boud0217
-Junfeng Rong – https://github.com/JunfengRong
+**Olga Durham** – https://github.com/shap0011 \
+**Anani Thierry Kassa** – https://github.com/AnaniKassa \
+**Dolsom Bouda** – https://github.com/boud0217 \
+**Junfeng Rong** – https://github.com/JunfengRong
 
 ---
 
@@ -52,3 +52,31 @@ The infrastructure is organized into Terraform modules:
   - AKS deployments
   - Azure Cache for Redis
   - Kubernetes services
+
+---
+
+## CI/CD Workflows (GitHub Actions)
+
+The project uses GitHub Actions for automation:
+
+- On Push (any branch):
+  - Terraform fmt, validate, tfsec
+- **On Pull Request (main branch)**:
+  - Terraform plan
+  - tflint
+  - Build & deploy app to **test environment**
+- **On Merge to Main**:
+  - Terraform apply (infrastructure deployment)
+  - Deploy app to **production environment**
+
+---
+
+## How to Run the Project
+
+### Prerequisites
+
+- Azure account
+- Terraform installed
+- Docker installed
+- kubectl installed
+- Azure CLI installed
