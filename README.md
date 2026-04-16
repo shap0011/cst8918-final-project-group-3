@@ -31,16 +31,13 @@ GitHub Actions is used to automate:
 
 ---
 
-## Reference Application
+## ## Reference Application
 
-This project is based on the Remix Weather Application provided by the course instructor:
+This project uses the course Remix Weather Application as the application base:
 
-- [cst8918-a03-h03-pulumi-weather](https://github.com/rlmckenney/cst8918-a03-h03-pulumi-weather)
+- Professor reference repository: [`rlmckenney/cst8918-a03-h03-pulumi-weather`](rlmckenney/cst8918-a03-h03-pulumi-weather)
 
-Note:
-The original project uses **Pulumi** for infrastructure deployment. In this project, we **replace Pulumi with Terraform** and extend the deployment using Azure AKS and GitHub Actions.
-
-The application code from this repository is reused and adapted for containerized deployment in Azure Kubernetes Service (AKS).
+The original reference project includes the application source code and Dockerfile. For this final project, the Pulumi-based infrastructure is replaced with Terraform modules, Azure AKS, Azure Redis, and GitHub Actions workflows.
 
 ---
 
