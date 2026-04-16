@@ -80,3 +80,69 @@ The project uses GitHub Actions for automation:
 - Docker installed
 - kubectl installed
 - Azure CLI installed
+
+### Setup Steps
+
+1. Clone the repository:
+
+```
+git clone https://github.com/shap0011/cst8918-final-project-group-3.git
+cd cst8918-final-project-group-3
+```
+
+2. Login to Azure:
+
+```
+az login
+```
+
+3. Initialize Terraform:
+
+```
+terraform init
+```
+
+4. Validate configuration:
+
+```
+terraform validate
+```
+
+5. Apply infrastructure:
+
+```
+terraform apply
+```
+
+---
+
+## Testing
+
+Infrastructure tests are automated using GitHub Actions:
+
+- Static analysis (fmt, validate, tfsec)
+- Terraform plan validation on pull requests
+
+---
+
+## Screenshots
+
+Add screenshots of successful GitHub Actions workflows here
+
+---
+
+## Clean Up
+
+After completing the project, remove Azure resources to avoid unnecessary charges:
+
+```
+terraform destroy
+```
+
+---
+
+## Repository Link
+
+GitHub Repository:
+
+https://github.com/shap0011/cst8918-final-project-group-3
