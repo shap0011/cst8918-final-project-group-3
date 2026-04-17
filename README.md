@@ -31,11 +31,11 @@ GitHub Actions is used to automate:
 
 ---
 
-## Reference Application
+## ## Reference Application
 
 This project uses the course Remix Weather Application as the application base:
 
-- Professor reference repository: [`rlmckenney/cst8918-a03-h03-pulumi-weather`](https://github.com/rlmckenney/cst8918-a03-h03-pulumi-weather)
+- Professor reference repository: [`rlmckenney/cst8918-a03-h03-pulumi-weather`](rlmckenney/cst8918-a03-h03-pulumi-weather)
 
 The original reference project includes the application source code and Dockerfile. For this final project, the Pulumi-based infrastructure is replaced with Terraform modules, Azure AKS, Azure Redis, and GitHub Actions workflows.
 
@@ -55,33 +55,13 @@ The infrastructure is organized into Terraform modules:
     - `dev`: 10.2.0.0/16
     - `admin`: 10.3.0.0/16
 - **AKS Module**
-  - Test cluster (1 node, Standard_B2s, Kubernetes 1.32)
-  - Production cluster (autoscaling 1–3 nodes, Standard_B2s, Kubernetes 1.32)
+  - Test cluster (1 node, B2s)
+  - Production cluster (1–3 nodes, B2s)
 - **Application Module**
   - Azure Container Registry (ACR)
   - AKS deployments
   - Azure Cache for Redis
   - Kubernetes services
-
----
-
-## Current Progress
-
-- Base network infrastructure implemented (VNet + 4 subnets)
-- AKS module created
-- Test environment AKS cluster configured
-- Production environment AKS cluster configured with autoscaling
-- Branch protection rules and pull request workflow implemented
-
----
-
-## Environments
-
-The project uses separate environments:
-
-- **dev** – initial infrastructure testing
-- **test** – application testing and validation
-- **prod** – production deployment with autoscaling
 
 ---
 
