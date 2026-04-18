@@ -45,19 +45,29 @@ The original reference project includes the application source code and Dockerfi
 
 The infrastructure is organized into Terraform modules:
 
-- **Backend Module**
-  - Azure Blob Storage for Terraform state
-- **Networking Module**
+- **Backend Module** (`terraform/modules/backend/`)
+  - Azure Resource Group for backend storage
+  - Azure Storage Account (Standard LRS, TLS 1.2)
+  - Azure Blob Container (`tfstate`) for Terraform state files
+  - Bootstrap environment at `terraform/environments/backend/` — applied once manually
+  - Each environment (`dev`, `test`, `prod`) stores its state in a separate key:
+    - `dev.terraform.tfstate`
+    - `test.terraform.tfstate`
+    - `prod.terraform.tfstate`
+
+- **Networking Module** (`terraform/modules/network/`)
   - Virtual Network: 10.0.0.0/14
   - Subnets:
     - `prod`: 10.0.0.0/16
     - `test`: 10.1.0.0/16
     - `dev`: 10.2.0.0/16
     - `admin`: 10.3.0.0/16
-- **AKS Module**
+
+- **AKS Module** (`terraform/modules/aks/`)
   - Test cluster (1 node, Standard_B2s, Kubernetes 1.32)
   - Production cluster (autoscaling 1–3 nodes, Standard_B2s, Kubernetes 1.32)
-- **Application Module**
+
+- **Application Module** (`terraform/modules/app/`) *(in progress)*
   - Azure Container Registry (ACR)
   - AKS deployments
   - Azure Cache for Redis
@@ -67,18 +77,20 @@ The infrastructure is organized into Terraform modules:
 
 ## Current Progress
 
+- Terraform backend module created and deployed (Azure Blob Storage, canadacentral)
+- Remote state configured for dev, test, and prod environments
 - Base network infrastructure implemented (VNet + 4 subnets)
 - AKS module created
 - Test environment AKS cluster configured
 - Production environment AKS cluster configured with autoscaling
-- Branch protection rules and pull request workflow implemented
 
 ---
 
 ## Environments
 
-The project uses separate environments:
+The project uses separate environments, each with its own remote Terraform state:
 
+- **backend** – bootstraps the Azure Blob Storage for remote state (applied once manually)
 - **dev** – initial infrastructure testing
 - **test** – application testing and validation
 - **prod** – production deployment with autoscaling
@@ -126,21 +138,31 @@ cd cst8918-final-project-group-3
 az login
 ```
 
-3. Initialize Terraform:
+3. Bootstrap the Terraform backend (run once, by one team member):
 
 ```
+cd terraform/environments/backend
+terraform init
+terraform apply
+```
+
+4. Initialize each environment (connects to the remote backend):
+
+```
+cd terraform/environments/dev
+terraform init
+
+cd terraform/environments/test
+terraform init
+
+cd terraform/environments/prod
 terraform init
 ```
 
-4. Validate configuration:
+5. Plan and apply an environment:
 
 ```
-terraform validate
-```
-
-5. Apply infrastructure:
-
-```
+terraform plan
 terraform apply
 ```
 
@@ -166,6 +188,16 @@ Add screenshots of successful GitHub Actions workflows here
 After completing the project, remove Azure resources to avoid unnecessary charges:
 
 ```
+cd terraform/environments/prod
+terraform destroy
+
+cd terraform/environments/test
+terraform destroy
+
+cd terraform/environments/dev
+terraform destroy
+
+cd terraform/environments/backend
 terraform destroy
 ```
 
