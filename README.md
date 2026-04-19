@@ -153,7 +153,7 @@ az login
 3. Bootstrap the Terraform backend (run once, by one team member):
 
 ```
-cd terraform/backend
+cd terraform/environments/backend
 terraform init
 terraform apply
 ```
