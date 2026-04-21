@@ -13,3 +13,8 @@ variable "cluster_name" {
 variable "dns_prefix" {
   type = string
 }
+
+variable "redis_name" {
+  description = "Azure Cache for Redis name for prod environment"
+  type        = string
+}

@@ -12,8 +12,16 @@ module "aks" {
   dns_prefix          = var.dns_prefix
   node_count          = 1
   vm_size             = "Standard_B2s"
-  kubernetes_version  = "1.32"
+  kubernetes_version  = "1.33"
   enable_auto_scaling = true
   min_count           = 1
   max_count           = 3
+}
+
+module "app" {
+  source = "../../modules/app"
+
+  resource_group_name = azurerm_resource_group.this.name
+  location            = azurerm_resource_group.this.location
+  redis_name          = var.redis_name
 }

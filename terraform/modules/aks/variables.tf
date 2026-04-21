@@ -32,7 +32,7 @@ variable "vm_size" {
 variable "kubernetes_version" {
   description = "Kubernetes version"
   type        = string
-  default     = "1.32"
+  default     = "1.33"
 }
 
 variable "enable_auto_scaling" {
