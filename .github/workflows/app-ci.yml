@@ -62,6 +62,11 @@ jobs:
           method: kubeconfig
           kubeconfig: ${{ secrets.KUBE_CONFIG }}
 
+      - name: Check file path
+        run: |
+          pwd
+          find . -name "deployment.yaml"
+
       - name: Deploy to AKS
         run: |
           IMAGE_URL="${{ vars.ACR_NAME }}.azurecr.io/remix-weather-app:${{ github.sha }}"
