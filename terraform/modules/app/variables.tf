@@ -8,11 +8,6 @@ variable "location" {
   type        = string
 }
 
-variable "acr_name" {
-  description = "Azure Container Registry name"
-  type        = string
-}
-
 variable "redis_name" {
   description = "Azure Cache for Redis name"
   type        = string
@@ -25,42 +20,13 @@ variable "redis_capacity" {
 }
 
 variable "redis_family" {
-  description = "Redis SKU family"
+  description = "Redis SKU family (C for Basic/Standard, P for Premium)"
   type        = string
   default     = "C"
 }
 
 variable "redis_sku_name" {
-  description = "Redis SKU name"
+  description = "Redis SKU name (Basic, Standard, Premium)"
   type        = string
   default     = "Basic"
-}
-
-variable "kubernetes_namespace" {
-  description = "Kubernetes namespace for the weather app"
-  type        = string
-  default     = "default"
-}
-
-variable "app_name" {
-  description = "Application name"
-  type        = string
-  default     = "weather-app"
-}
-
-variable "image_name" {
-  description = "Container image name"
-  type        = string
-}
-
-variable "image_tag" {
-  description = "Container image tag"
-  type        = string
-  default     = "latest"
-}
-
-variable "container_port" {
-  description = "Container port"
-  type        = number
-  default     = 3000
 }

@@ -11,7 +11,11 @@ output "cluster_id" {
 }
 
 output "acr_login_server" {
-  value = module.app.acr_login_server
+  value = module.acr.acr_login_server
+}
+
+output "acr_name" {
+  value = module.acr.acr_name
 }
 
 output "redis_hostname" {

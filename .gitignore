@@ -12,3 +12,5 @@ node_modules
 *.tfstate.*
 terraform.log
 crash.log
+test.md
+terraform/environments/backend/.terraform.lock.hcl

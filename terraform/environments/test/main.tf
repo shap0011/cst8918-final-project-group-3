@@ -12,8 +12,16 @@ module "aks" {
   dns_prefix          = var.dns_prefix
   node_count          = 1
   vm_size             = "Standard_B2s"
-  kubernetes_version  = "1.32"
+  kubernetes_version  = "1.33"
   enable_auto_scaling = false
+}
+
+module "acr" {
+  source = "../../modules/acr"
+
+  resource_group_name = azurerm_resource_group.this.name
+  location            = azurerm_resource_group.this.location
+  acr_name            = var.acr_name
 }
 
 module "app" {
@@ -21,10 +29,5 @@ module "app" {
 
   resource_group_name = azurerm_resource_group.this.name
   location            = azurerm_resource_group.this.location
-
-  acr_name   = "group3testacr"
-  redis_name = "group3-test-redis"
-
-  image_name = "weather-app"
-  image_tag  = "latest"
+  redis_name          = var.redis_name
 }

@@ -9,3 +9,7 @@ output "cluster_name" {
 output "cluster_id" {
   value = module.aks.cluster_id
 }
+
+output "redis_hostname" {
+  value = module.app.redis_hostname
+}
