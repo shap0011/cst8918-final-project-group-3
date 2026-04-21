@@ -1,23 +1,31 @@
-name: Application CI (Docker Build & Push)
+name: Application CI/CD (Build, Push & Deploy)
 
 on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'app/**'
+      - 'Dockerfile'
+      - 'k8s/**'
   push:
     branches: [main]
     paths:
-      - 'app/**' # Triggered only when the content of the application folder changes
+      - 'app/**'
       - 'Dockerfile'
+      - 'k8s/**'
 
 permissions:
-  id-token: write # OIDC
+  id-token: write
   contents: read
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ github.sha }}
     env:
       ACR_NAME: ${{ vars.ACR_NAME }}
       IMAGE_NAME: remix-weather-app
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -30,15 +38,35 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Login to ACR
-        run: |
-          az acr login --name ${{ env.ACR_NAME }}
+        run: az acr login --name ${{ env.ACR_NAME }}
 
       - name: Build and Push Docker Image
         run: |
           FULL_IMAGE_NAME="${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}"
-
-          echo "Building image: $FULL_IMAGE_NAME"
-
           docker build -t $FULL_IMAGE_NAME .
-
           docker push $FULL_IMAGE_NAME
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.event_name == 'pull_request' && 'test' || 'production' }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set Kubernetes Context
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+
+      - name: Deploy to AKS
+        run: |
+          IMAGE_URL="${{ vars.ACR_NAME }}.azurecr.io/remix-weather-app:${{ github.sha }}"
+          sed -i "s|<IMAGE_PLACEHOLDER>|$IMAGE_URL|g" k8s/deployment.yaml
+
+          kubectl apply -f k8s/deployment.yaml
+
+          kubectl rollout status deployment/remix-weather-app
