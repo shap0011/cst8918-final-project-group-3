@@ -1,28 +1,27 @@
 name: Application CI (Docker Build & Push)
 
 on:
-  pull_request:
+  push:
     branches: [main]
     paths:
       - 'app/**' # Triggered only when the content of the application folder changes
       - 'Dockerfile'
 
 permissions:
-  id-token: write # OIDC 认证必需
+  id-token: write # OIDC
   contents: read
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     env:
-      ACR_NAME: ${{ vars.ACR_NAME }} # 例如: cst8918group3acr.azurecr.io
+      ACR_NAME: ${{ vars.ACR_NAME }}
       IMAGE_NAME: remix-weather-app
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # 1. 登录 Azure (使用 Phase 1 配置好的 OIDC)
       - name: Azure Login
         uses: azure/login@v2
         with:
@@ -30,12 +29,10 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      # 2. 登录到 ACR
       - name: Login to ACR
         run: |
           az acr login --name ${{ env.ACR_NAME }}
 
-      # 3. 构建并推送镜像 (使用 Commit SHA 作为 Tag)
       - name: Build and Push Docker Image
         run: |
           FULL_IMAGE_NAME="${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}"
