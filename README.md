@@ -25,9 +25,9 @@ The application deployed is the **Remix Weather Application**, which is containe
 
 GitHub Actions is used to automate:
 
-- Terraform validation and planning
-- Infrastructure deployment
-- Application build and deployment
+- Terraform static analysis and validation
+- Terraform planning and deployment
+- Application build, push, and deployment
 
 ---
 
@@ -63,27 +63,22 @@ The infrastructure is organized into Terraform modules:
     - `dev`: 10.2.0.0/16
     - `admin`: 10.3.0.0/16
 
+- **ACR Module** (`terraform/modules/acr/`)
+  - Single shared Azure Container Registry (Basic SKU)
+  - Deployed in the test environment, shared with prod
+
 - **AKS Module** (`terraform/modules/aks/`)
-  - Test cluster (1 node, Standard_B2s, Kubernetes 1.32)
-  - Production cluster (autoscaling 1–3 nodes, Standard_B2s, Kubernetes 1.32)
+  - Test cluster (1 node, Standard_B2s, Kubernetes 1.33)
+  - Production cluster (autoscaling 1–3 nodes, Standard_B2s, Kubernetes 1.33)
 
 - **Application Module** (`terraform/modules/app/`)
-  - Azure Container Registry (ACR)
-  - Azure Cache for Redis
-  - (Kubernetes deployment and services to be implemented)
+  - Azure Cache for Redis (Basic C0) — one instance per environment
+  - Test Redis: `group3-test-redis`
+  - Prod Redis: `group3-prod-redis`
 
----
-
-## Current Progress
-
-- Terraform backend module created and deployed (Azure Blob Storage, canadacentral)
-- Remote state configured for dev, test, and prod environments
-- Base network infrastructure implemented (VNet + 4 subnets)
-- AKS module created
-- Test environment AKS cluster configured
-- Production environment AKS cluster configured with autoscaling
-- Application module implemented (ACR + Redis)
-- Test environment extended with application resources (ACR + Redis)
+- **Kubernetes Manifests** (`k8s/`)
+  - Deployment and Service for the Remix Weather Application
+  - Image pulled from ACR, Redis credentials injected via Kubernetes Secret
 
 ---
 
@@ -92,36 +87,33 @@ The infrastructure is organized into Terraform modules:
 The project uses separate environments, each with its own remote Terraform state:
 
 - **backend** – bootstraps the Azure Blob Storage for remote state (applied once manually)
-- **dev** – initial infrastructure testing
-- **test** – application testing and validation
-- **prod** – production deployment with autoscaling
-
----
-
-## Team Workflow
-
-To maintain consistent infrastructure and avoid duplicate deployments:
-
-- A single team member manages Azure resource deployment (`terraform apply`)
-- Other team members use `terraform plan` for validation
-- All changes are made through feature branches
-- Pull Requests require at least one reviewer before merging
+- **dev** – base network infrastructure
+- **test** – AKS cluster, ACR, Redis, application deployment
+- **prod** – AKS cluster with autoscaling, Redis, application deployment
 
 ---
 
 ## CI/CD Workflows (GitHub Actions)
 
-The project uses GitHub Actions for automation:
+| Workflow | Trigger | Jobs |
+|---|---|---|
+| `static-analysis.yml` | Push to any branch (terraform changes) | terraform fmt, validate, tfsec |
+| `pr-checks.yml` | Pull request to main (terraform changes) | tflint, terraform plan |
+| `terraform-apply.yml` | Push to main (terraform changes) | terraform apply (test + prod) |
+| `app-ci.yml` | PR or push to main (app/k8s changes) | Docker build & push to ACR, deploy to test (PR) or prod (merge) |
 
-- On Push (any branch):
-  - Terraform fmt, validate, tfsec
-- **On Pull Request (main branch)**:
-  - Terraform plan
-  - tflint
-  - Build & deploy app to **test environment**
-- **On Merge to Main**:
-  - Terraform apply (infrastructure deployment)
-  - Deploy app to **production environment**
+---
+
+## Azure Infrastructure
+
+- Region: `canadacentral`
+- Subscription: `MOC DS - 10266`
+- Backend storage: `cst8918grp3tfstate` (Azure Blob Storage)
+- Container Registry: `group3acr.azurecr.io`
+- Test AKS: `group3-test-aks`
+- Prod AKS: `group3-prod-aks`
+- Test Redis: `group3-test-redis.redis.cache.windows.net`
+- Prod Redis: `group3-prod-redis.redis.cache.windows.net`
 
 ---
 
@@ -148,6 +140,7 @@ cd cst8918-final-project-group-3
 
 ```
 az login
+az account set --subscription "efd1c19c-fd0b-4ed0-9233-72467657d647"
 ```
 
 3. Bootstrap the Terraform backend (run once, by one team member):
@@ -178,14 +171,14 @@ terraform plan
 terraform apply
 ```
 
----
+6. After deploying AKS, attach ACR and create Redis secret:
 
-## Testing & Validation
+```
+az aks update --name group3-test-aks --resource-group cst8918-final-project-group-3-test --attach-acr group3acr
 
-Infrastructure tests are automated using GitHub Actions:
-
-- Static analysis (fmt, validate, tfsec)
-- Terraform plan validation on pull requests
+kubectl create secret generic redis-credentials \
+  --from-literal=REDIS_URL="rediss://:PRIMARY_KEY@group3-test-redis.redis.cache.windows.net:6380"
+```
 
 ---
 
