@@ -196,6 +196,9 @@ kubectl create secret generic redis-credentials \
 ### Terraform Apply
 ![Terraform Apply Workflow](screenshots/terraform%20apply%20workflow.png)
 
+### Application CI/CD
+![App CI Build and Push](screenshots/app-ci%20workflow.png)
+
 ### Application CI/CD — Build and Push
 ![App CI Build and Push](screenshots/app-ci%20workflow%20build%20and%20push.png)
 
