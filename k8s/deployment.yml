@@ -21,18 +21,11 @@ spec:
             - containerPort: 3000
           resources:
             requests:
-              cpu: '100m'
-              memory: '256Mi'
+              cpu: '10m'
+              memory: '100Mi'
             limits:
               cpu: '500m'
               memory: '512Mi'
-          env:
-            # 从 K8s Secret 中安全地获取 REDIS_URL
-            - name: REDIS_URL
-              valueFrom:
-                secretKeyRef:
-                  name: redis-credentials
-                  key: REDIS_URL
 ---
 apiVersion: v1
 kind: Service
