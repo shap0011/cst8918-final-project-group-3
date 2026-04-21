@@ -62,16 +62,11 @@ jobs:
           method: kubeconfig
           kubeconfig: ${{ secrets.KUBE_CONFIG }}
 
-      - name: Check file path
-        run: |
-          pwd
-          find . -name "deployment.yaml"
-
       - name: Deploy to AKS
         run: |
           IMAGE_URL="${{ vars.ACR_NAME }}.azurecr.io/remix-weather-app:${{ github.sha }}"
-          sed -i "s|<IMAGE_PLACEHOLDER>|$IMAGE_URL|g" k8s/deployment.yaml
+          sed -i "s|<IMAGE_PLACEHOLDER>|$IMAGE_URL|g" k8s/deployment.yml
 
-          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/deployment.yml
 
           kubectl rollout status deployment/remix-weather-app
