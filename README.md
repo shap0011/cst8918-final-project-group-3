@@ -184,7 +184,23 @@ kubectl create secret generic redis-credentials \
 
 ## Screenshots
 
-Add screenshots of successful GitHub Actions workflows here
+### All Workflows History
+![All Workflows History](screenshots/all%20workflows%20history.png)
+
+### Terraform Static Analysis
+![Terraform Static Analysis](screenshots/Terroform%20static%20analysis.png)
+
+### Terraform PR Checks
+![PR Checks Workflow](screenshots/PR%20checks%20workflow.png)
+
+### Terraform Apply
+![Terraform Apply Workflow](screenshots/terraform%20apply%20workflow.png)
+
+### Application CI/CD — Build and Push
+![App CI Build and Push](screenshots/app-ci%20workflow%20build%20and%20push.png)
+
+### Application CI/CD — Deploy
+![App CI Deploy](screenshots/app-ci%20workflow%20deploy.png)
 
 ---
 
