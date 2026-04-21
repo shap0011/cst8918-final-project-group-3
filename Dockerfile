@@ -6,13 +6,11 @@ RUN apk -U add --update-cache openssl
 
 # set for base and all layer that inherit from it
 ENV NODE_ENV=production
+WORKDIR /usr/src/app
 
 # Install all node_modules, including dev dependencies
 FROM base as deps
-
-WORKDIR /usr/src/app
-
-ADD package.json ./
+ADD package.json package-lock.json ./
 RUN npm install --include=dev
 
 # Setup production node_modules
@@ -21,7 +19,7 @@ FROM base as production-deps
 WORKDIR /usr/src/app
 
 COPY --from=deps /usr/src/app/node_modules /usr/src/app/node_modules
-ADD package.json ./
+ADD package.json package-lock.json ./
 RUN npm prune --omit=dev
 
 # Build the app
