@@ -7,12 +7,12 @@ resource "azurerm_kubernetes_cluster" "this" {
   kubernetes_version  = var.kubernetes_version
 
   default_node_pool {
-    name                = "default"
-    vm_size             = var.vm_size
-    node_count          = var.enable_auto_scaling ? null : var.node_count
+    name                 = "default"
+    vm_size              = var.vm_size
+    node_count           = var.enable_auto_scaling ? null : var.node_count
     auto_scaling_enabled = var.enable_auto_scaling
-    min_count           = var.enable_auto_scaling ? var.min_count : null
-    max_count           = var.enable_auto_scaling ? var.max_count : null
+    min_count            = var.enable_auto_scaling ? var.min_count : null
+    max_count            = var.enable_auto_scaling ? var.max_count : null
   }
 
   identity {
@@ -20,7 +20,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   network_profile {
-    network_plugin = "azure"
+    network_plugin    = "azure"
     load_balancer_sku = "standard"
   }
 }
