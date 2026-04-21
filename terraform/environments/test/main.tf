@@ -15,3 +15,16 @@ module "aks" {
   kubernetes_version  = "1.32"
   enable_auto_scaling = false
 }
+
+module "app" {
+  source = "../../modules/app"
+
+  resource_group_name = azurerm_resource_group.this.name
+  location            = azurerm_resource_group.this.location
+
+  acr_name   = "group3testacr"
+  redis_name = "group3-test-redis"
+
+  image_name = "weather-app"
+  image_tag  = "latest"
+}

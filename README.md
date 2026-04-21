@@ -67,11 +67,10 @@ The infrastructure is organized into Terraform modules:
   - Test cluster (1 node, Standard_B2s, Kubernetes 1.32)
   - Production cluster (autoscaling 1–3 nodes, Standard_B2s, Kubernetes 1.32)
 
-- **Application Module** (`terraform/modules/app/`) *(in progress)*
+- **Application Module** (`terraform/modules/app/`)
   - Azure Container Registry (ACR)
-  - AKS deployments
   - Azure Cache for Redis
-  - Kubernetes services
+  - (Kubernetes deployment and services to be implemented)
 
 ---
 
@@ -83,6 +82,8 @@ The infrastructure is organized into Terraform modules:
 - AKS module created
 - Test environment AKS cluster configured
 - Production environment AKS cluster configured with autoscaling
+- Application module implemented (ACR + Redis)
+- Test environment extended with application resources (ACR + Redis)
 
 ---
 
@@ -94,6 +95,17 @@ The project uses separate environments, each with its own remote Terraform state
 - **dev** – initial infrastructure testing
 - **test** – application testing and validation
 - **prod** – production deployment with autoscaling
+
+---
+
+## Team Workflow
+
+To maintain consistent infrastructure and avoid duplicate deployments:
+
+- A single team member manages Azure resource deployment (`terraform apply`)
+- Other team members use `terraform plan` for validation
+- All changes are made through feature branches
+- Pull Requests require at least one reviewer before merging
 
 ---
 
@@ -168,7 +180,7 @@ terraform apply
 
 ---
 
-## Testing
+## Testing & Validation
 
 Infrastructure tests are automated using GitHub Actions:
 
