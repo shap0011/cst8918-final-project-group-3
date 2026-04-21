@@ -12,7 +12,6 @@ function isDataStale(lastFetch: number) {
   return Date.now() - lastFetch > TEN_MINUTES
 }
 
-
 interface FetchWeatherDataParams {
   lat: number
   lon: number
