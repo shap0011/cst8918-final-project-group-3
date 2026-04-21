@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: remix-weather-app
+  labels:
+    app: remix-weather
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: remix-weather
+  template:
+    metadata:
+      labels:
+        app: remix-weather
+    spec:
+      containers:
+        - name: remix-app
+          image: <IMAGE_PLACEHOLDER>
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              cpu: '100m'
+              memory: '256Mi'
+            limits:
+              cpu: '500m'
+              memory: '512Mi'
+          env:
+            # 从 K8s Secret 中安全地获取 REDIS_URL
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: redis-credentials
+                  key: REDIS_URL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: remix-weather-service
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 3000
+      protocol: TCP
+  selector:
+    app: remix-weather
