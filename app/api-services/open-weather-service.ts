@@ -35,6 +35,7 @@ export async function fetchWeatherData({
   return data
 }
 
+
 export async function getGeoCoordsForPostalCode(
   postalCode: string,
   countryCode: string,
