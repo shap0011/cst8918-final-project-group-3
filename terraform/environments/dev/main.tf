@@ -6,7 +6,7 @@ resource "azurerm_resource_group" "this" {
 module "network" {
   source = "../../modules/network"
 
-  resource_group_name   = azurerm_resource_group.this.name
-  location              = azurerm_resource_group.this.location
-  virtual_network_name  = var.virtual_network_name
+  resource_group_name  = azurerm_resource_group.this.name
+  location             = azurerm_resource_group.this.location
+  virtual_network_name = var.virtual_network_name
 }
